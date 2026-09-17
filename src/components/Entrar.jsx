@@ -1,4 +1,8 @@
 import styled from "styled-components";
+import ValidarEntrada from "../functions/ValidarEntrada"
+import { useNavigate } from "react-router-dom"
+
+
 
 const Modelo = styled.div`
   background: #fff;
@@ -17,9 +21,28 @@ const FormularioTitulo = styled.div`
   text-align: center;
 `;
 export default function Entrar() {
+
+  const navegar = useNavigate()
+
+  function Validar(evento) {
+    const email = evento.target.email.value
+    const senha = evento.target.senha.value
+
+    ValidarEntrada(email, senha)
+      .then(function(resposta) {
+        if (resposta.status === 202)
+          navegar("/explorar")
+      })
+      .catch(function(erro) {
+        alert(erro.message)
+      })
+    
+    evento.preventDefault()
+  }
+
   return (
     <Modelo>
-      <Formulario action="/explorar" method="GET">
+      <Formulario action="/explorar" method="GET" onSubmit={ Validar }>
         <FormularioTitulo> Entrar </FormularioTitulo>
         <input type="text" placeholder="Email" required />
         <input type="password" placeholder="****" required />
